@@ -5,7 +5,7 @@ import store from './store'
 import Statics from './shared/statics'
 
 if (window.location.hostname.endsWith("cloudplayer.liborb.com")) {
-    Statics.baseApiUrl = "/";
+    Statics.baseApiUrl = "api/";
 }
 else {
     Statics.baseApiUrl = "https://localhost:5001/api/";
