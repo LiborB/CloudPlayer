@@ -4,6 +4,4 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-git pull origin master
-cd ~/CloudPlayer/CloudPlayer.Server/CloudPlayerAPI/bin/Release/netcoreapp3.1
-tmux new-session -d -s "CloudPlayer" ./DONTRUN-build-run-server
+tmux new-session -d -s "CloudPlayer" ~/CloudPlayer/DONTRUN-build-run-server
