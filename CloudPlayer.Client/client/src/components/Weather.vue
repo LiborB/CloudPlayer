@@ -8,6 +8,7 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
+import Statics from "../shared/statics";
 
 export default Vue.extend({
     name: "Weather",
@@ -17,7 +18,7 @@ export default Vue.extend({
         };
     },
     mounted() {
-        axios.get("https://localhost:5001/api/weather/getweathers").then(
+        axios.get(Statics.baseApiUrl + "weather/getweathers").then(
             response => {
                 this.weathers = response.data;
             },
