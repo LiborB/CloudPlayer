@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import Statics from './shared/statics'
 
-if (window.location.hostname === "cloudplayer.liborb.com") {
+if (window.location.hostname.endsWith("cloudplayer.liborb.com")) {
     Statics.baseApiUrl = "/";
 }
 else {
