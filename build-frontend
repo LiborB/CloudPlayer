@@ -5,6 +5,6 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 git pull origin master
-npm install --prefix CloudPlayer.Client/client/dist/
-npm run build --prefix client
+npm install --prefix CloudPlayer.Client/client/
+npm run build --prefix CloudPlayer.Client/client/
 cp -r ~/CloudPlayer/CloudPlayer.Client/client/dist/. /var/www/cloudplayer.liborb.com/
