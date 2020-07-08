@@ -5,8 +5,5 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 git pull origin master
-tmux new-session -A -s CloudPlayer
 cd ~/CloudPlayer/CloudPlayer.Server/CloudPlayerAPI/bin/Release/netcoreapp3.1
-dotnet publish --configuration Release
-dotnet run
-tmux detach -s CloudPlayer
+tmux new-session -d -s "CloudPlayer" ./DONTRUN-build-run-server
