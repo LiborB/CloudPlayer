@@ -1,0 +1,12 @@
+#!/bin/bash
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+git pull origin master
+tmux new-session -A -s CloudPlayer
+cd ~/CloudPlayer/CloudPlayer.Server/CloudPlayerAPI/bin/Release/netcoreapp3.1
+dotnet publish --configuration Release
+dotnet run
+tmux detach -s CloudPlayer
