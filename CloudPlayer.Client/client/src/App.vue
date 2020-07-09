@@ -1,33 +1,73 @@
 <template>
-    <div id="app">
-        <div id="nav">
-            <router-link to="/">Home</router-link> |
-            <router-link to="/about">About</router-link>
-            <router-link to="/weather">Weather</router-link>
-        </div>
-        <router-view />
-    </div>
+    <v-app>
+        <v-app-bar app>
+            <v-toolbar-title
+                ><a href="/" class="app-title">CloudPlayer</a></v-toolbar-title
+            >
+            <v-spacer></v-spacer>
+            <v-menu v-if="isUserAuthenticated" offset-y
+                ><template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on">
+                        <v-icon>mdi-account-circle</v-icon>
+                    </v-btn>
+                </template>
+
+                <v-list>
+                    <v-list-item @click="logout()">
+                        <v-list-item-title>Logout</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+        </v-app-bar>
+
+        <v-main>
+            <v-container fluid>
+                <router-view></router-view>
+            </v-container>
+        </v-main>
+    </v-app>
 </template>
 
+<script lang="ts">
+import Vue from "vue";
+import UserService from "../src/services/user-service";
+import { mapState } from "vuex";
+
+export default Vue.extend({
+    name: "App",
+    data() {
+        return {
+            //
+        };
+    },
+    methods: {
+        logout() {
+            this.$store.commit("setIsUserAuthenticated", false);
+            this.$router.push({ name: "Login" });
+        }
+    },
+    computed: {
+        ...mapState({
+            isUserAuthenticated: (state: any) => state.isUserAuthenticated
+        })
+    },
+    mounted() {
+        //
+    }
+});
+</script>
 <style>
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
+html {
+    overflow: auto !important;
 }
 
-#nav {
-    padding: 30px;
+body {
+    font-family: "Open Sans", sans-serif !important;
 }
 
-#nav a {
+#app .app-title {
+    text-decoration-line: none;
+    color: inherit;
     font-weight: bold;
-    color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-    color: #42b983;
 }
 </style>
