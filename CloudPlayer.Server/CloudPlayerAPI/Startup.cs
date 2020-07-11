@@ -31,8 +31,10 @@ namespace CloudPlayerAPI
             services.AddCors();
             services.AddControllers();
 
+            
+            
             services.AddDbContextPool<CloudPlayerContext>(options =>
-                options.UseMySql("server=localhost;database=cloudplayer;user=root;password=biggertree123",
+                options.UseMySql(Configuration.GetConnectionString("CloudPlayer"),
                     mySqlOptions => mySqlOptions.ServerVersion(new Version(8, 0, 2), ServerType.MySql)));
         }
 
@@ -46,7 +48,7 @@ namespace CloudPlayerAPI
 
             app.UseHttpsRedirection();
             app.UseCors(
-                options => options.WithOrigins("http://localhost:8080").AllowAnyMethod()
+                options => options.WithOrigins(Configuration.GetSection("AllowedHosts").Get<string[]>()).AllowAnyMethod().AllowAnyHeader()
             );
             app.UseRouting();
 

@@ -1,13 +1,23 @@
 <template>
-    <div></div>
+    <div>
+        <home age="">
+
+        </home>
+    </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import Vue from "vue";
-import UserService from "../services/user-service";
+<script lang="ts">
+    // @ is an alias to /src
+    import Vue from "vue";
+    import {Component} from "vue-property-decorator"
+    import Home from "@/components/Home.vue";
 
-export default Vue.extend({
-    name: "Home"
-});
+    @Component({
+        name: "home-page",
+        components: {
+            Home
+        }
+    })
+    export default class HomePage extends Vue {
+    }
 </script>

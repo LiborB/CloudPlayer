@@ -7,37 +7,40 @@
                     <v-row>
                         <v-col>
                             <v-text-field
-                                :rules="[requiredValidator]"
-                                v-model="username"
-                                outlined=""
-                                label="Username"
-                                prepend-inner-icon="mdi-account"
+                                    :rules="[requiredValidator]"
+                                    v-model="username"
+                                    outlined=""
+                                    label="Username"
+                                    prepend-inner-icon="mdi-account"
                             >
                             </v-text-field>
                             <v-text-field
-                                :rules="[requiredValidator]"
-                                prepend-inner-icon="mdi-lock-question"
-                                :append-icon="
+                                    :rules="[requiredValidator]"
+                                    prepend-inner-icon="mdi-lock-question"
+                                    :append-icon="
                                     showPassword ? 'mdi-eye' : 'mdi-eye-off'
                                 "
-                                :type="showPassword ? 'text' : 'password'"
-                                v-model="password"
-                                outlined=""
-                                label="Password"
-                                @click:append="showPassword = !showPassword"
+                                    :type="showPassword ? 'text' : 'password'"
+                                    v-model="password"
+                                    outlined=""
+                                    label="Password"
+                                    @click:append="showPassword = !showPassword"
                             ></v-text-field>
+                            <span class="error--text" v-if="userPassIncorrect">Username/password incorrect</span>
                             <v-checkbox
-                                class="remember-me"
-                                label="Remember Me"
+                                    v-model="rememberMe"
+                                    class="remember-me"
+                                    label="Remember Me"
                             ></v-checkbox>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col>
                             <router-link
-                                class="register-link"
-                                :to="{ name: 'Register' }"
-                                >Create an account</router-link
+                                    class="register-link"
+                                    :to="{ name: 'Register' }"
+                            >Create an account
+                            </router-link
                             >
                         </v-col>
                         <v-col class="text-right">
@@ -51,26 +54,40 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { VForm } from "vuetify/lib";
-import UserService from "../services/user-service";
-export default Vue.extend({
-    name: "login",
-    data() {
-        return {
-            username: "",
-            password: "",
-            showPassword: false
-        };
-    },
-    methods: {
+    import Vue from "vue";
+    import UserService from "../services/user-service";
+    import UserLoginVM from "@/view-models/user-login-vm";
+    import Statics from "@/shared/statics";
+    import {Component, Ref} from "vue-property-decorator";
+
+    @Component({
+        name: "login"
+    })
+    export default class Login extends Vue {
+        private username = "";
+        private password = "";
+        private showPassword = false;
+        private rememberMe = false;
+        private userPassIncorrect = false;
+        @Ref("loginForm") readonly loginForm!: Vue & any;
+
         onSubmit() {
             const formRef = this.$refs.loginForm as any;
             if (!formRef.validate()) {
                 return false;
             }
-            this.$store.commit("setIsUserAuthenticated", true);
-        },
+            const userLoginVM = new UserLoginVM();
+            userLoginVM.Username = this.username;
+            userLoginVM.Password = this.password;
+            userLoginVM.RememberMe = this.rememberMe;
+            UserService.login(userLoginVM).then(response => {
+                Statics.userToken = response.data;
+                this.$store.commit("setIsUserAuthenticated", true);
+            }, error => {
+                this.userPassIncorrect = true;
+            })
+        }
+
         requiredValidator(value: string) {
             if (value.length === 0) {
                 return "This field is required";
@@ -78,20 +95,19 @@ export default Vue.extend({
             return true;
         }
     }
-});
 </script>
 
+<style scoped>
+    .remember-me {
+        margin-top: -10px;
+    }
+</style>
 <style>
-.login-title {
-    font-size: 30px;
-    margin-bottom: 5px;
-}
-
-.register-link {
-    text-decoration: none;
-}
-
-.remember-me {
-    margin-top: -10px;
-}
+    .register-link {
+        text-decoration: none;
+    }
+    .login-title {
+        font-size: 30px;
+        margin-bottom: 5px;
+    }
 </style>

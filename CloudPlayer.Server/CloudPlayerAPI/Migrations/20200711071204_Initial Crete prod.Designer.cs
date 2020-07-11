@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CloudPlayerAPI.Migrations
 {
     [DbContext(typeof(CloudPlayerContext))]
-    [Migration("20200710083940_update user constraints")]
-    partial class updateuserconstraints
+    [Migration("20200711071204_Initial Crete prod")]
+    partial class InitialCreteprod
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,10 +28,17 @@ namespace CloudPlayerAPI.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasColumnType("varchar(64) CHARACTER SET utf8mb4")
+                        .HasMaxLength(64);
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("varbinary(16)")
+                        .HasMaxLength(16);
+
+                    b.Property<bool>("RememberMe")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Token")
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
