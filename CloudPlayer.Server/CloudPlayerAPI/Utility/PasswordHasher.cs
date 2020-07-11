@@ -53,7 +53,7 @@ namespace CloudPlayerAPI.Utility
         public static bool isPasswordCorrect(string enteredPassword, string hashedPassword, byte[] salt)
         {
             var passwordHash = GeneratePasswordHash(enteredPassword, salt);
-            return passwordHash == enteredPassword;
+            return passwordHash == hashedPassword;
 
         }
     }
