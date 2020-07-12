@@ -27,11 +27,6 @@
                                     @click:append="showPassword = !showPassword"
                             ></v-text-field>
                             <span class="error--text" v-if="userPassIncorrect">Username/password incorrect</span>
-                            <v-checkbox
-                                    v-model="rememberMe"
-                                    class="remember-me"
-                                    label="Remember Me"
-                            ></v-checkbox>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -67,7 +62,6 @@
         private username = "";
         private password = "";
         private showPassword = false;
-        private rememberMe = false;
         private userPassIncorrect = false;
         @Ref("loginForm") readonly loginForm!: Vue & any;
 
@@ -79,10 +73,11 @@
             const userLoginVM = new UserLoginVM();
             userLoginVM.Username = this.username;
             userLoginVM.Password = this.password;
-            userLoginVM.RememberMe = this.rememberMe;
             UserService.login(userLoginVM).then(response => {
                 Statics.userToken = response.data;
                 this.$store.commit("setIsUserAuthenticated", true);
+                UserService.addUserTokenToLocalStorage(response.data);
+                this.$router.push({name: "Home"})
             }, error => {
                 this.userPassIncorrect = true;
             })
@@ -106,6 +101,7 @@
     .register-link {
         text-decoration: none;
     }
+
     .login-title {
         font-size: 30px;
         margin-bottom: 5px;

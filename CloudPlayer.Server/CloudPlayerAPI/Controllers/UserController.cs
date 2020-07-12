@@ -83,5 +83,12 @@ namespace CloudPlayerAPI.Controllers
         {
             return _context.User.Any(x => x.Username.ToUpper() == username.ToUpper());
         }
+
+        [Route("istokenvalid")]
+        [HttpGet]
+        public bool IsTokenValid(string token)
+        {
+            return _context.User.Any(x => x.Token == token);
+        }
     }
 }

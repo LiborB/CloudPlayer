@@ -32,6 +32,8 @@
 <script lang="ts">
     import Vue from "vue";
     import {mapState} from "vuex";
+    import UserService from "@/services/user-service";
+    import Statics from "@/shared/statics";
 
     export default Vue.extend({
         name: "App",
@@ -43,8 +45,8 @@
         methods: {
             logout() {
                 this.$store.commit("setIsUserAuthenticated", false);
+                UserService.removeUserTokenFromLocalStorage();
                 this.$router.push({name: "Login"});
-
             }
         },
         computed: {

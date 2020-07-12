@@ -5,6 +5,7 @@ import About from '../views/About.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import UserService from '@/services/user-service'
+import store from "../store/index"
 
 Vue.use(VueRouter)
 
@@ -41,7 +42,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.name !== "Register" && to.name !== "Login" && !UserService.isUserAuthenticated()) {
+    if (to.name !== "Register" && to.name !== "Login" && !store.state.isUserAuthenticated) {
         next({ name: "Login" });
     }
     next()

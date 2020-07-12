@@ -114,7 +114,8 @@
             UserService.register(userRegisterVM).then(response => {
                 Statics.userToken = response.data;
                 this.$store.commit("setIsUserAuthenticated", true);
-                this.$router.push({name: "Home"})
+                UserService.addUserTokenToLocalStorage(response.data);
+                this.$router.push({name: "Home"});
             }, error => {
                 this.unknownErrorMessage = error
             })
