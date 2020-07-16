@@ -5,6 +5,7 @@ import store from './store'
 import Statics from './shared/statics'
 import vuetify from './plugins/vuetify';
 import UserService from "@/services/user-service";
+import axios from "axios";
 
 if (window.location.hostname.endsWith("cloudplayer.liborb.com")) {
     Statics.baseApiUrl = "api/";
@@ -19,6 +20,9 @@ if (userToken) {
         if (response.data === true) {
             Statics.userToken = userToken;
             store.commit("setIsUserAuthenticated", true);
+            axios.defaults.headers.common = {
+                "user_token": userToken
+            };
         }
         new Vue({
             router,

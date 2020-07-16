@@ -47,11 +47,11 @@ namespace CloudPlayerAPI
             }
 
             app.UseHttpsRedirection();
+            
+            app.UseRouting();
             app.UseCors(
                 options => options.WithOrigins(Configuration.GetSection("AllowedHosts").Get<string[]>()).AllowAnyMethod().AllowAnyHeader()
             );
-            app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

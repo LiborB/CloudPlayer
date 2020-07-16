@@ -54,6 +54,7 @@
     import UserLoginVM from "@/view-models/user-login-vm";
     import Statics from "@/shared/statics";
     import {Component, Ref} from "vue-property-decorator";
+    import axios from "axios";
 
     @Component({
         name: "login"
@@ -77,6 +78,9 @@
                 Statics.userToken = response.data;
                 this.$store.commit("setIsUserAuthenticated", true);
                 UserService.addUserTokenToLocalStorage(response.data);
+                axios.defaults.headers.common = {
+                    "user_token": response.data
+                };
                 this.$router.push({name: "Home"})
             }, error => {
                 this.userPassIncorrect = true;

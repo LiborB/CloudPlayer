@@ -17,6 +17,34 @@ namespace CloudPlayerAPI.Migrations
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("CloudPlayerAPI.Models.Song", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Song");
+                });
+
             modelBuilder.Entity("CloudPlayerAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -31,9 +59,9 @@ namespace CloudPlayerAPI.Migrations
                         .HasColumnType("varchar(64) CHARACTER SET utf8mb4")
                         .HasMaxLength(64);
 
-                    b.Property<string>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("varbinary(16)")
+                        .HasMaxLength(16);
 
                     b.Property<string>("Token")
                         .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
@@ -47,6 +75,15 @@ namespace CloudPlayerAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("CloudPlayerAPI.Models.Song", b =>
+                {
+                    b.HasOne("CloudPlayerAPI.Models.User", "User")
+                        .WithMany("Songs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -6,15 +6,16 @@ using CloudPlayerAPI.Data;
 using CloudPlayerAPI.Models;
 using CloudPlayerAPI.Utility;
 using CloudPlayerAPI.ViewModel;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudPlayerAPI.Controllers
 {
+    [EnableCors()]
     [Route("api/users")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseApiController
     {
-        private readonly CloudPlayerContext _context;
 
         public UserController(CloudPlayerContext context)
         {
@@ -61,8 +62,7 @@ namespace CloudPlayerAPI.Controllers
                 PasswordHash = hashedPasswordAndSalt.Hash,
                 PasswordSalt = hashedPasswordAndSalt.Salt,
                 Created = DateTime.UtcNow,
-                Token = userToken,
-                RememberMe = false
+                Token = userToken
             });
             _context.SaveChanges();
             return Ok(userToken);

@@ -50,7 +50,7 @@
                             >
                         </v-col>
                         <v-col class="text-right">
-                            <v-btn color="primary" type="submit">Login</v-btn>
+                            <v-btn color="primary" type="submit">Register</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>

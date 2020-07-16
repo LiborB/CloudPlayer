@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
@@ -19,7 +20,7 @@ namespace CloudPlayerAPI.Models
         public string Token { get; set; }
         [Required]
         public DateTime Created { get; set; }
-        [Required]
-        public bool RememberMe { get; set; }
+        
+        public List<Song> Songs { get; set; }
     }
 }

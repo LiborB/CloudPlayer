@@ -8,6 +8,7 @@ namespace CloudPlayerAPI.Data
     public partial class CloudPlayerContext : DbContext
     {
         public DbSet<User> User { get; set; }
+        public DbSet<Song> Song { get; set; }
 
         public CloudPlayerContext(DbContextOptions<CloudPlayerContext> options)
             : base(options)

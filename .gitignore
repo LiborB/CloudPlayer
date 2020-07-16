@@ -353,3 +353,5 @@ appsettings.*.json
 
 .build-deploy-frontend
 .build-deploy-backend
+
+UserSongs/*
