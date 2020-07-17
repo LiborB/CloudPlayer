@@ -33,7 +33,6 @@
     import Vue from "vue";
     import {mapState} from "vuex";
     import UserService from "@/services/user-service";
-    import Statics from "@/shared/statics";
 
     export default Vue.extend({
         name: "App",
@@ -61,7 +60,7 @@
 </script>
 <style>
     html {
-        overflow: auto !important;
+        overflow: hidden !important;
     }
 
     body {

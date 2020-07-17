@@ -5,11 +5,18 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        isUserAuthenticated: false
+        isUserAuthenticated: false,
+        songAdded: {value:false}
+
     },
     mutations: {
         setIsUserAuthenticated(state, payload) {
             state.isUserAuthenticated = payload
+        },
+        setSongAdded(state) {
+            state.songAdded = {
+                value: true
+            }
         }
     },
     actions: {

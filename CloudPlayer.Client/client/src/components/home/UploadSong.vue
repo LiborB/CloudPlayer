@@ -1,7 +1,7 @@
 <template>
     <div>
         <input accept="audio/*" type="file" ref="file" class="d-none" @change="fileUploadChange">
-        <v-btn color="blue-grey" class="white--text" @click.stop="uploadClick">
+        <v-btn class="primary" @click.stop="uploadClick">
             <v-icon left>mdi-cloud-upload</v-icon>
             Upload Song
         </v-btn>
@@ -30,7 +30,7 @@
 
             <template v-slot:action="{ attrs }">
                 <v-btn
-                        color="info"
+                        color="secondary"
                         text
                         v-bind="attrs"
                         @click="songAdded = false"
@@ -45,7 +45,6 @@
 <script lang="ts">
     import Vue from "vue"
     import {Component} from "vue-property-decorator"
-    import {VForm} from "vuetify/lib";
     import SongService from "@/services/song-service";
     import AddSongVM from "@/view-models/add-song-vm";
 
@@ -90,15 +89,12 @@
                 SongService.addSong(addSongVM).then(response => {
                     this.dialog = false;
                     this.songAdded = true;
+                    this.$store.commit("setSongAdded");
                 }, error => {
                     console.log(error)
                 })
 
             }
-        }
-
-        addSong() {
-//
         }
     }
 </script>

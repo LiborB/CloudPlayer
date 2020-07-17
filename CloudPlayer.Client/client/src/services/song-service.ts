@@ -1,6 +1,7 @@
 import AddSongVM from "@/view-models/add-song-vm";
 import axios from "axios";
 import Statics from "@/shared/statics";
+import SongVM from "@/view-models/song-vm";
 
 export default class SongService {
     private static readonly apiPrefix = "songs/";
@@ -14,5 +15,9 @@ export default class SongService {
                 "Content-Type": "multipart/form-data"
             }
         })
+    }
+
+    public static getAllSongs() {
+        return axios.get<SongVM[]>(Statics.baseApiUrl + this.apiPrefix + "getallsongs");
     }
 }
