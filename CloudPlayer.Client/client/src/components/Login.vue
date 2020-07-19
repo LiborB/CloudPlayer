@@ -72,8 +72,8 @@
                 return false;
             }
             const userLoginVM = new UserLoginVM();
-            userLoginVM.Username = this.username;
-            userLoginVM.Password = this.password;
+            userLoginVM.username = this.username;
+            userLoginVM.password = this.password;
             UserService.login(userLoginVM).then(response => {
                 Statics.userToken = response.data;
                 this.$store.commit("setIsUserAuthenticated", true);

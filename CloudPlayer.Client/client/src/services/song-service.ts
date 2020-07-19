@@ -8,8 +8,8 @@ export default class SongService {
 
     public static addSong(song: AddSongVM) {
         const formData = new FormData();
-        formData.set("Title", song.Title)
-        formData.append("File", song.File!);
+        formData.set("Title", song.title)
+        formData.append("File", song.file!);
         return axios.post(Statics.baseApiUrl + this.apiPrefix + "addsong", formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
@@ -19,5 +19,14 @@ export default class SongService {
 
     public static getAllSongs() {
         return axios.get<SongVM[]>(Statics.baseApiUrl + this.apiPrefix + "getallsongs");
+    }
+
+    public static getSingleSongBlob(songId: number) {
+        return axios.get(Statics.baseApiUrl + this.apiPrefix + "getsinglesongblob", {
+            params: {
+                songId: songId
+            },
+            responseType: "blob"
+        });
     }
 }

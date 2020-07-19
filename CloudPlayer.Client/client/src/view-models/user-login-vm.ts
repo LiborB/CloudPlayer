@@ -1,5 +1,5 @@
 export default class UserLoginVM {
-    public Username = "";
-    public Password = "";
-    public RememberMe = false;
+    public username = "";
+    public password = "";
+    public rememberMe = false;
 }

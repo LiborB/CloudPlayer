@@ -22,22 +22,9 @@
                     </v-col>
                 </v-row>
 
-                <v-app-bar app bottom>
-                    <div class="playback-row">
-                        <v-btn icon>
-                            <v-icon>mdi-rewind-outline</v-icon>
-                        </v-btn>
-                        <v-btn icon>
-                            <v-icon>mdi-pause</v-icon>
-                        </v-btn>
-                        <v-btn icon>
+                <playback-bar>
 
-                            <v-icon>mdi-fast-forward-outline</v-icon>
-                        </v-btn>
-                    </div>
-
-
-                </v-app-bar>
+                </playback-bar>
             </v-col>
         </v-row>
 
@@ -49,10 +36,11 @@
     import {Component} from "vue-property-decorator";
     import UploadSong from "@/components/home/UploadSong.vue"
     import AllSongs from "@/components/home/AllSongs.vue";
+    import PlaybackBar from "@/components/home/PlaybackBar.vue";
 
     @Component({
         name: "home",
-        components: {AllSongs, UploadSong}
+        components: {PlaybackBar, AllSongs, UploadSong}
     })
     export default class Home extends Vue {
         private listItemSelected = 0;
@@ -63,10 +51,5 @@
     .content-row {
         overflow: hidden;
         max-height: 73vh;
-    }
-
-    .playback-row {
-        width: 100%;
-        text-align: center;
     }
 </style>

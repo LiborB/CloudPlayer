@@ -8,7 +8,7 @@
             <template v-slot:body="{items}">
                 <tbody>
                 <tr @dblclick="playSong(item)" class="song-row" @click="selectedItem = item"
-                    :class="{'selected-row': selectedItem === item, 'current-playing-row': currentPlayingItem === item}" v-for="(item, index) in items" :key="index">
+                    :class="{'selected-row': selectedItem === item, 'current-playing-row': currentPlayingItem === item}" v-for="item in items" :key="item.id">
                     <td><v-icon color="primary" v-if="currentPlayingItem === item">mdi-music-note-outline</v-icon>&nbsp;{{item.title}}</td>
                     <td>{{item.duration}}</td>
                 </tr>
@@ -16,6 +16,7 @@
 
             </template>
         </v-data-table>
+
     </div>
 </template>
 
@@ -24,6 +25,7 @@
     import {Component, Watch,} from "vue-property-decorator";
     import SongService from "@/services/song-service";
     import SongVM from "@/view-models/song-vm";
+    import {Howl} from "howler"
 
     @Component({
         name: "all-songs"
@@ -46,10 +48,6 @@
 
         mounted() {
             this.getSongs();
-
-            this.$on("songAdded", () => {
-                this.getSongs();
-            })
         }
 
         getSongs() {
@@ -68,8 +66,8 @@
         }
 
         playSong(song: SongVM) {
+            this.$store.commit("playSong", song);
             this.currentPlayingItem = song;
-
         }
     }
 </script>

@@ -1,4 +1,5 @@
 export default class SongVM {
-    public Title = "";
-    public Duration = 0;
+    public id = 0;
+    public title = "";
+    public duration = 0;
 }

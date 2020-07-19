@@ -1,4 +1,4 @@
 export default class UserRegisterVM {
-    public Username = "" ;
-    public Password = "";
+    public username = "" ;
+    public password = "";
 }

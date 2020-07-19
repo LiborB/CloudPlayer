@@ -1,4 +1,4 @@
 export default class AddSongVM {
-    public Title = ""
-    public File?: File;
+    public title = ""
+    public file?: File;
 }

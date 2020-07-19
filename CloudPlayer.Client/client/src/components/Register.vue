@@ -109,8 +109,8 @@
                 return false;
             }
             const userRegisterVM = new UserRegisterVM();
-            userRegisterVM.Username = this.username;
-            userRegisterVM.Password = this.password;
+            userRegisterVM.username = this.username;
+            userRegisterVM.password = this.password;
             UserService.register(userRegisterVM).then(response => {
                 Statics.userToken = response.data;
                 this.$store.commit("setIsUserAuthenticated", true);

@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using CloudPlayerAPI.Data;
 using CloudPlayerAPI.Models;
 using CloudPlayerAPI.ViewModel;
@@ -32,6 +34,7 @@ namespace CloudPlayerAPI.Controllers
             var songs = _context.Song.Where(x => x.UserId == user.Id);
             var songVms = songs.Select(x => new SongVM()
             {
+                Id = x.Id,
                 Title = x.Title,
                 Duration = x.Duration
             });
@@ -66,6 +69,22 @@ namespace CloudPlayerAPI.Controllers
 
 
             return Ok();
+        }
+
+        [Route("getsinglesongblob")]
+        [HttpGet]
+        public IActionResult GetSingleSongBlob(int songId)
+        {
+            var song = _context.Song.FirstOrDefault(x => x.Id == songId);
+            if (song == null)
+            {
+                return NotFound();
+            }
+
+            var songFile = System.IO.File.ReadAllBytes(song.FilePath);
+
+
+            return File(songFile, "application/octet-stream");
         }
     }
 }

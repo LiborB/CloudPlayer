@@ -84,8 +84,8 @@
             if (form.validate()) {
                 const addSongVM = new AddSongVM();
                 const file = this.$refs.file as HTMLInputElement;
-                addSongVM.Title = this.title;
-                addSongVM.File = file.files![0];
+                addSongVM.title = this.title;
+                addSongVM.file = file.files![0];
                 SongService.addSong(addSongVM).then(response => {
                     this.dialog = false;
                     this.songAdded = true;
