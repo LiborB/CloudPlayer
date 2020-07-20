@@ -7,9 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         isUserAuthenticated: false,
-        songAdded: {value:false},
+        songAdded: {value: false},
         playSong: new SongVM()
-
     },
     mutations: {
         setIsUserAuthenticated(state, payload) {
@@ -29,8 +28,6 @@ export default new Vuex.Store({
             state.playSong = newSongVM;
         }
     },
-    actions: {
-    },
-    modules: {
-    }
+    actions: {},
+    modules: {}
 })

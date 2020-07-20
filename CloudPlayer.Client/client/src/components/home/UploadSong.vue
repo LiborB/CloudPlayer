@@ -40,6 +40,30 @@
                 </v-btn>
             </template>
         </v-snackbar>
+        <v-snackbar
+                v-model="songAddedError"
+        >
+            Something went wrong
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                        color="error"
+                        text
+                        v-bind="attrs"
+                        @click="songAddedError = false"
+                >
+                    Close
+                </v-btn>
+            </template>
+        </v-snackbar>
+        <v-snackbar
+                v-model="isUploadingSong"
+        >
+            Uploading
+            <v-progress-linear indeterminate rounded height="6">
+
+            </v-progress-linear>
+        </v-snackbar>
     </div>
 </template>
 
@@ -58,6 +82,8 @@
         private title = "";
         private songAdded = false;
         private duration = 0;
+        private songAddedError = false;
+        private isUploadingSong = false;
 
         fileUploadChange(event: Event) {
             const fileInput = event.target as HTMLInputElement;
@@ -102,13 +128,17 @@
                 addSongVM.title = this.title;
                 addSongVM.file = file.files![0];
                 addSongVM.duration = this.duration;
-                console.log(this.duration)
+                this.dialog = false;
+                this.isUploadingSong = true;
                 SongService.addSong(addSongVM).then(response => {
-                    this.dialog = false;
+                    this.songAddedError = false;
                     this.songAdded = true;
+                    this.isUploadingSong = false;
                     this.$store.commit("setSongAdded");
                 }, error => {
                     console.log(error)
+                    this.songAddedError = true;
+                    this.isUploadingSong = false;
                 })
 
             }
