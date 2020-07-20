@@ -64,7 +64,7 @@
             SongService.getSingleSongBlob(song.id).then(response => {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 this.howlSound = new Howl({
-                    format: ["mp3"],
+                    format: ["mp3", "mpeg", "opus", "ogg", "oga", "wav", "aac", "caf", "m4a", "mp4", "weba", "webm", "dolby", "flac"],
                     src: url,
                     volume: this.volume,
                     onplay: this.progressInterval

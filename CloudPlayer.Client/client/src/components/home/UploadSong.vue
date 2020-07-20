@@ -12,7 +12,8 @@
                 <v-card-text>
                     <v-container>
                         <v-form ref="formRef">
-                            <v-text-field :rules="[titleValidator]" required v-model="title" label="Title"></v-text-field>
+                            <v-text-field :rules="[titleValidator]" required v-model="title"
+                                          label="Title"></v-text-field>
                         </v-form>
                     </v-container>
                 </v-card-text>
@@ -47,6 +48,7 @@
     import {Component} from "vue-property-decorator"
     import SongService from "@/services/song-service";
     import AddSongVM from "@/view-models/add-song-vm";
+    import {Howl} from "howler";
 
     @Component({
         name: "upload-song"
@@ -55,12 +57,25 @@
         private dialog = false;
         private title = "";
         private songAdded = false;
+        private duration = 0;
 
         fileUploadChange(event: Event) {
             const fileInput = event.target as HTMLInputElement;
 
             if (fileInput?.files?.length) {
                 this.title = fileInput.files[0].name.replace(/\.[^/.]+$/, "");
+                const reader = new FileReader();
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = () => {
+                    const howlSound = new Howl({
+                        format: ["mp3", "mpeg", "opus", "ogg", "oga", "wav", "aac", "caf", "m4a", "mp4", "weba", "webm", "dolby", "flac"],
+                        src: [reader.result as string],
+                        onload: () => {
+                            this.duration = howlSound.duration()
+                        }
+                    });
+                }
+
             }
             this.dialog = true;
         }
@@ -86,6 +101,8 @@
                 const file = this.$refs.file as HTMLInputElement;
                 addSongVM.title = this.title;
                 addSongVM.file = file.files![0];
+                addSongVM.duration = this.duration;
+                console.log(this.duration)
                 SongService.addSong(addSongVM).then(response => {
                     this.dialog = false;
                     this.songAdded = true;

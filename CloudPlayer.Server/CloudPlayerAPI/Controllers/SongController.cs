@@ -55,11 +55,9 @@ namespace CloudPlayerAPI.Controllers
             var fileStream = System.IO.File.Create(userSongFullPath);
             file.CopyTo(fileStream);
             fileStream.Close();
-            var audio = new AudioFileReader(userSongFullPath);
-            audio.Close();
             var song = new Song()
             {
-                Duration = (int) audio.TotalTime.TotalSeconds,
+                Duration = addSongVm.Duration,
                 Title = addSongVm.Title,
                 UserId = user.Id,
                 FilePath = userSongFullPath

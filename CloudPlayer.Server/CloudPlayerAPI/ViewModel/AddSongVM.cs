@@ -6,5 +6,6 @@ namespace CloudPlayerAPI.ViewModel
     {
         public string Title { get; set; }
         public IFormFile File { get; set; }
+        public int Duration { get; set; }
     }
 }
