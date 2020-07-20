@@ -9,6 +9,7 @@ export default class SongService {
     public static addSong(song: AddSongVM) {
         const formData = new FormData();
         formData.set("Title", song.title)
+        formData.set("Duration", song.duration.toString());
         formData.append("File", song.file!);
         return axios.post(Statics.baseApiUrl + this.apiPrefix + "addsong", formData, {
             headers: {
