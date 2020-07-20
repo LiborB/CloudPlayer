@@ -1,5 +1,4 @@
 <template>
-    <div>
         <v-row>
             <v-col>
                 <v-row>
@@ -21,14 +20,8 @@
                         <all-songs v-if="listItemSelected === 0"></all-songs>
                     </v-col>
                 </v-row>
-
-                <playback-bar>
-
-                </playback-bar>
             </v-col>
         </v-row>
-
-    </div>
 </template>
 
 <script lang="ts">
@@ -40,7 +33,7 @@
 
     @Component({
         name: "home",
-        components: {PlaybackBar, AllSongs, UploadSong}
+        components: {AllSongs, UploadSong}
     })
     export default class Home extends Vue {
         private listItemSelected = 0;
@@ -50,6 +43,8 @@
 <style scoped>
     .content-row {
         overflow: hidden;
-        max-height: 73vh;
+        /*max-height: 73vh;*/
+        /*margin-bottom: 100px;*/
+        height: 100%;
     }
 </style>

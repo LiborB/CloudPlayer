@@ -25,7 +25,13 @@
             <v-container fluid>
                 <router-view></router-view>
             </v-container>
+
         </v-main>
+        <v-footer app height="auto">
+                <playback-bar v-if="isUserAuthenticated">
+
+                </playback-bar>
+        </v-footer>
     </v-app>
 </template>
 
@@ -33,6 +39,7 @@
     import Vue from "vue";
     import {mapState} from "vuex";
     import UserService from "@/services/user-service";
+    import PlaybackBar from "@/components/home/PlaybackBar.vue";
 
     export default Vue.extend({
         name: "App",
@@ -40,6 +47,9 @@
             return {
                 //
             };
+        },
+        components: {
+            PlaybackBar
         },
         methods: {
             logout() {
@@ -60,11 +70,12 @@
 </script>
 <style>
     html {
-        overflow: hidden !important;
+        overflow: hidden;
     }
 
     body {
         font-family: "Open Sans", sans-serif !important;
+        height: 100%;
     }
 
     #app .app-title {

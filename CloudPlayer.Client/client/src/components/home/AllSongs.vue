@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-data-table height="75vh" item-class="h1" :items="songs" :headers="headers" :search="search" disable-pagination
+    <v-card height="70vh" >
+        <v-data-table class="song-table" style="height: 100%" item-class="h1" :items="songs" :headers="headers" :search="search" disable-pagination
                       hide-default-footer>
             <template slot="top">
                 <v-text-field v-model="search" label="Search" class="mx-4"></v-text-field>
@@ -17,7 +17,7 @@
             </template>
         </v-data-table>
 
-    </div>
+    </v-card>
 </template>
 
 <script lang="ts">
@@ -93,5 +93,6 @@
 
     .song-table {
         overflow: auto;
+        height: 100%;
     }
 </style>

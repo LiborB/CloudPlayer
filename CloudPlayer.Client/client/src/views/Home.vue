@@ -1,9 +1,7 @@
 <template>
-    <div>
-        <home age="">
+    <home age="">
 
-        </home>
-    </div>
+    </home>
 </template>
 
 <script lang="ts">

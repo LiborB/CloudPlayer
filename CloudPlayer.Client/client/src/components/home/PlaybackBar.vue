@@ -15,7 +15,7 @@
                 </v-btn>
             </div>
         </div>
-        <div class="d-flex justify-center align-center">
+        <div class="slider-row d-flex justify-center align-center">
 
             <v-slider @start="startGrabbing" @end="endGrabbing" class="progress-bar" @change="progressUserChange" v-model="songProgress" step="0.1">
                 <template v-slot:prepend>
@@ -126,7 +126,7 @@
 
 <style scoped lang="scss">
     .playback-row {
-        width: 100%;
+        /*width: 100%;*/
         text-align: center;
     }
 
@@ -136,11 +136,17 @@
 
     .playback-bar {
         background-color: #272727;
-        position: fixed;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-        margin-bottom: 0px;
-        height: 7%;
+        /*position: fixed;*/
+        /*bottom: 0px;*/
+        /*left: 0px;*/
+        /*right: 0px;*/
+        /*margin-bottom: 0px;*/
+        /*height: 7%;*/
+        width: 100%;
+    }
+
+    .slider-row {
+        padding-left:30%;
+        padding-right: 30%;
     }
 </style>
