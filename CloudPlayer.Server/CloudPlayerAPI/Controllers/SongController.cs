@@ -9,7 +9,6 @@ using CloudPlayerAPI.ViewModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
-using NAudio.Wave;
 
 namespace CloudPlayerAPI.Controllers
 {
