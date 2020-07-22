@@ -8,7 +8,8 @@ export default new Vuex.Store({
     state: {
         isUserAuthenticated: false,
         songAdded: {value: false},
-        playSong: new SongVM()
+        playSong: new SongVM(),
+        queuedSongs: [] as SongVM[]
     },
     mutations: {
         setIsUserAuthenticated(state, payload) {
@@ -26,6 +27,15 @@ export default new Vuex.Store({
             newSongVM.title = songVm.title;
             newSongVM.duration = songVm.duration;
             state.playSong = newSongVM;
+        },
+
+        addToQueue(state, songVm: SongVM) {
+            state.queuedSongs.push(songVm);
+        },
+
+        removeFromQueue(state, songVm: SongVM) {
+            const songIndex = state.queuedSongs.findIndex(x => x.id === songVm.id);
+            state.queuedSongs.splice(songIndex, 1);
         }
     },
     actions: {},

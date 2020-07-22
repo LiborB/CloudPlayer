@@ -31,17 +31,17 @@
 </template>
 
 <script lang="ts">
-    import Vue from "vue";
-    import {Component, Watch} from "vue-property-decorator";
+    import {Component, Mixins, Watch} from "vue-property-decorator";
     import SongVM from "@/view-models/song-vm";
     import SongService from "@/services/song-service";
     import {Howl} from "howler";
     import * as moment from "moment";
+    import TimeUtility from "@/components/mixins/TimeUtility.vue";
 
     @Component({
         name: "playback-bar"
     })
-    export default class PlaybackBar extends Vue {
+    export default class PlaybackBar extends Mixins(TimeUtility) {
         private grabbing = false;
         private volume = 0.2;
         private songProgress = 0;
@@ -62,18 +62,24 @@
                 this.songProgress = 0;
             }
             SongService.getSingleSongBlob(song.id).then(response => {
+                this.song = song;
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 this.howlSound = new Howl({
                     format: ["mp3", "mpeg", "opus", "ogg", "oga", "wav", "aac", "caf", "m4a", "mp4", "weba", "webm", "dolby", "flac"],
                     src: url,
                     volume: this.volume,
-                    onplay: this.progressInterval
+                    onplay: this.onSongPlay,
+                    onend: this.onSongEnd
                 });
                 this.howlSound.play();
-                this.song = song;
                 this.totalSongDurationFormatted = moment.utc(this.song.duration * 1000).format("mm:ss");
                 this.paused = false;
             });
+        }
+
+        onSongPlay() {
+            this.$store.commit("removeFromQueue", this.song);
+            this.progressInterval();
         }
 
         progressInterval() {
@@ -120,6 +126,13 @@
 
         endGrabbing() {
             this.grabbing = false;
+        }
+
+        onSongEnd() {
+            if (this.$store.state.queuedSongs.length > 0) {
+                const nextSong = this.$store.state.queuedSongs[0];
+                this.playSong(nextSong);
+            }
         }
     }
 </script>

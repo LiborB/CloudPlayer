@@ -1,36 +1,41 @@
 <template>
-    <v-card height="70vh" >
-        <v-data-table class="song-table" style="height: 100%" item-class="h1" :items="songs" :headers="headers" :search="search" disable-pagination
+    <v-card height="70vh" outlined>
+        <v-data-table class="song-table" style="height: 100%" item-class="h1" :items="songs" :headers="headers"
+                      :search="search" disable-pagination
                       hide-default-footer>
             <template slot="top">
                 <v-text-field v-model="search" label="Search" class="mx-4"></v-text-field>
             </template>
             <template v-slot:body="{items}">
                 <tbody>
-                <tr @dblclick="playSong(item)" class="song-row" @click="selectedItem = item"
-                    :class="{'selected-row': selectedItem === item, 'current-playing-row': currentPlayingItem === item}" v-for="item in items" :key="item.id">
-                    <td><v-icon color="primary" v-if="currentPlayingItem === item">mdi-music-note-outline</v-icon>&nbsp;{{item.title}}</td>
-                    <td>{{item.duration}}</td>
+                <tr @contextmenu="openSongContextMenu($event, item)" @dblclick="playSong(item)" class="song-row"
+                    @click="selectedItem = item"
+                    :class="{'selected-row': selectedItem === item, 'current-playing-row': currentPlayingItem === item}"
+                    v-for="item in items" :key="item.id">
+                    <td>
+                        <v-icon color="primary" v-if="currentPlayingItem === item">mdi-music-note-outline</v-icon>&nbsp;{{item.title}}
+                    </td>
+                    <td>{{secondsToDurationFormat(item.duration)}}</td>
                 </tr>
                 </tbody>
 
             </template>
         </v-data-table>
-
+        <song-context-menu ref="contextMenu"></song-context-menu>
     </v-card>
 </template>
 
 <script lang="ts">
-    import Vue from "vue"
-    import {Component, Watch,} from "vue-property-decorator";
+    import {Component, Mixins, Ref, Watch,} from "vue-property-decorator";
     import SongService from "@/services/song-service";
     import SongVM from "@/view-models/song-vm";
-    import {Howl} from "howler"
-
+    import TimeUtility from "@/components/mixins/TimeUtility.vue";
+    import SongContextMenu from "@/components/home/SongContextMenu.vue";
     @Component({
-        name: "all-songs"
+        name: "all-songs",
+        components: {SongContextMenu}
     })
-    export default class AllSongs extends Vue {
+    export default class AllSongs extends Mixins(TimeUtility) {
         private songs: SongVM[] = [];
         private search = "";
         private selectedItem: SongVM = new SongVM();
@@ -45,6 +50,8 @@
                 value: "duration"
             }
         ]
+        @Ref("contextMenu")
+        contextMenuRef!: SongContextMenu;
 
         mounted() {
             this.getSongs();
@@ -69,11 +76,16 @@
             this.$store.commit("playSong", song);
             this.currentPlayingItem = song;
         }
+
+        openSongContextMenu(event: MouseEvent, songVM: SongVM) {
+            (this.contextMenuRef as any).openMenu(event, songVM);
+        }
     }
 </script>
 
 <style scoped lang="scss">
     @import "../../styles/variables";
+
     .selected-row {
         //
     }
