@@ -8,6 +8,7 @@ using CloudPlayerAPI.Models;
 using CloudPlayerAPI.ViewModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting.Internal;
 
 namespace CloudPlayerAPI.Controllers

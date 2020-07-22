@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="Data\UserSongs" />
+    <Folder Include="Data\UserSongs\1" />
     <Folder Include="Migrations" />
   </ItemGroup>
 
