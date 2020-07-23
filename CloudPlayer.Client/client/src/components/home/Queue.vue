@@ -9,17 +9,16 @@
 <!--        </v-list>-->
         <v-card-title class="justify-center">Up Next</v-card-title>
         <v-list>
-            <v-list-item @contextmenu="openSongContextMenu($event, song)" :ripple="false" @click="1" v-for="(song, index) in queuedSongs" v-bind:key="index" >
+            <v-list-item @contextmenu="openSongContextMenu($event, song)" :ripple="false" link v-for="(song, index) in queuedSongs" v-bind:key="index" >
                 <v-list-item-content>
                     <v-list-item-title>{{song.title}}</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-action>
                     <v-list-item-action-text>{{secondsToDurationFormat(song.duration)}}</v-list-item-action-text>
                 </v-list-item-action>
-
             </v-list-item>
         </v-list>
-        <song-context-menu :remove-from-queue-button="true" ref="contextMenu"></song-context-menu>
+        <song-context-menu :is-queue-mode="true" ref="contextMenu"></song-context-menu>
     </v-card>
 </template>
 

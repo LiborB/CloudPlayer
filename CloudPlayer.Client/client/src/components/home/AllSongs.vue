@@ -1,7 +1,7 @@
 <template>
     <v-card height="70vh" outlined>
         <v-data-table class="song-table" style="height: 100%" item-class="h1" :items="songs" :headers="headers"
-                      :search="search" disable-pagination
+                      :search="search" disable-pagination @current-items="currentSongsChange"
                       hide-default-footer>
             <template slot="top">
                 <v-text-field v-model="search" label="Search" class="mx-4"></v-text-field>
@@ -10,10 +10,10 @@
                 <tbody>
                 <tr @contextmenu="openSongContextMenu($event, item)" @dblclick="playSong(item)" class="song-row"
                     @click="selectedItem = item"
-                    :class="{'selected-row': selectedItem === item, 'current-playing-row': currentPlayingItem === item}"
+                    :class="{'selected-row': selectedItem.id === item.id, 'current-playing-row': currentPlayingItem.id === item.id}"
                     v-for="item in items" :key="item.id">
                     <td>
-                        <v-icon color="primary" v-if="currentPlayingItem === item">mdi-music-note-outline</v-icon>&nbsp;{{item.title}}
+                        <v-icon color="primary" v-if="currentPlayingItem.id === item.id">mdi-music-note-outline</v-icon>&nbsp;{{item.title}}
                     </td>
                     <td>{{secondsToDurationFormat(item.duration)}}</td>
                 </tr>
@@ -31,6 +31,7 @@
     import SongVM from "@/view-models/song-vm";
     import TimeUtility from "@/components/mixins/TimeUtility.vue";
     import SongContextMenu from "@/components/home/SongContextMenu.vue";
+
     @Component({
         name: "all-songs",
         components: {SongContextMenu}
@@ -39,7 +40,6 @@
         private songs: SongVM[] = [];
         private search = "";
         private selectedItem: SongVM = new SongVM();
-        private currentPlayingItem: SongVM = new SongVM();
         private headers = [
             {
                 text: "Title",
@@ -72,13 +72,20 @@
             this.getSongs();
         }
 
+        get currentPlayingItem() {
+            return this.$store.state.playSong;
+        }
+
         playSong(song: SongVM) {
             this.$store.commit("playSong", song);
-            this.currentPlayingItem = song;
         }
 
         openSongContextMenu(event: MouseEvent, songVM: SongVM) {
             (this.contextMenuRef as any).openMenu(event, songVM);
+        }
+
+        currentSongsChange(songs: SongVM[]) {
+            this.$store.commit("setDefaultQueuedSongs", songs);
         }
     }
 </script>

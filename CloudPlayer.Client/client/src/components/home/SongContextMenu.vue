@@ -1,14 +1,20 @@
 <template>
     <v-menu @close="closeSongContextMenu" v-model="songContextMenu.open" absolute :position-x="songContextMenu.x" :position-y="songContextMenu.y">
-        <v-list>
-            <v-list-item v-if="!removeFromQueueButton" @click="addToQueue(songContextMenu.song)">
-                <v-list-item-title>
-                    Add to queue
-                </v-list-item-title>
-            </v-list-item>
-            <v-list-item v-else @click="removeFromQueue(songContextMenu.song)">
+
+        <v-list v-if="isQueueMode">
+            <v-list-item @click="removeFromQueue(songContextMenu.song)">
                 <v-list-item-title>
                     Remove from queue
+                </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="moveToTopOfQueue(songContextMenu.song)">
+                <v-list-item-title>Top of queue</v-list-item-title>
+            </v-list-item>
+        </v-list>
+        <v-list v-else>
+            <v-list-item @click="addToQueue(songContextMenu.song)">
+                <v-list-item-title>
+                    Add to queue
                 </v-list-item-title>
             </v-list-item>
         </v-list>
@@ -25,7 +31,7 @@
     })
     export default class SongContextMenu extends Vue {
         @Prop(Boolean)
-        removeFromQueueButton = false;
+        isQueueMode!: boolean;
         private songContextMenu = {
             open: false,
             x: 0,
@@ -53,6 +59,10 @@
             this.songContextMenu.y = event.clientY;
             this.songContextMenu.song = songVM;
             this.songContextMenu.open = true;
+        }
+
+        moveToTopOfQueue(song: SongVM) {
+            this.$store.commit("moveToTopOfQueue", song);
         }
 
     }

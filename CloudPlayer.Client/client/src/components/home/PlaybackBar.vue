@@ -1,32 +1,47 @@
 <template>
-
     <div class="playback-bar">
-        <div class="d-flex justify-center">
-            <div class="playback-row">
-                <v-btn icon>
-                    <v-icon>mdi-rewind-outline</v-icon>
-                </v-btn>
-                <v-btn icon @click="togglePauseSong">
-                    <v-icon v-show="!paused">mdi-pause</v-icon>
-                    <v-icon large v-show="paused">mdi-play</v-icon>
-                </v-btn>
-                <v-btn icon>
-                    <v-icon>mdi-fast-forward-outline</v-icon>
-                </v-btn>
-            </div>
-        </div>
-        <div class="slider-row d-flex justify-center align-center">
+        <v-row no-gutters>
+            <v-col></v-col>
+            <v-col cols="6">
+                <div class="d-flex justify-center">
+                    <div class="playback-row">
+                        <v-btn icon @click="previousSongClick">
+                            <v-icon>mdi-rewind-outline</v-icon>
+                        </v-btn>
+                        <v-btn icon @click="togglePauseSong">
+                            <v-icon v-show="!paused">mdi-pause</v-icon>
+                            <v-icon large v-show="paused">mdi-play</v-icon>
+                        </v-btn>
+                        <v-btn icon @click="nextSongClick">
+                            <v-icon>mdi-fast-forward-outline</v-icon>
+                        </v-btn>
+                    </div>
+                </div>
+                <div class="slider-row d-flex justify-center align-center">
 
-            <v-slider @start="startGrabbing" @end="endGrabbing" class="progress-bar" @change="progressUserChange" v-model="songProgress" step="0.1">
-                <template v-slot:prepend>
-                    <span>{{currentSongTimeFormatted}}</span>
-                </template>
-                <template v-slot:append>
-                    <span>{{totalSongDurationFormatted}}</span>
-                </template>
-            </v-slider>
+                    <v-slider step="0.1" :thumb-label="true" @start="startGrabbing" @end="endGrabbing" class="progress-bar" @change="progressUserChange" v-model="songProgress" min="0" :max="song.duration">
+                        <template v-slot:prepend>
+                            <span>{{currentSongTimeFormatted}}</span>
+                        </template>
+                        <template v-slot:append>
+                            <span>{{totalSongDurationFormatted}}</span>
+                        </template>
+                        <template v-slot:thumb-label="{value}">
+                            {{secondsToDurationFormat(value)}}
+                        </template>
+                    </v-slider>
 
-        </div>
+                </div>
+            </v-col>
+            <v-col align-self="end">
+                <v-row>
+                    <v-col offset="11">
+                        hell
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-row>
+
     </div>
 </template>
 
@@ -50,6 +65,7 @@
         private paused = true;
         private totalSongDurationFormatted = "00:00";
         private currentSongTimeFormatted = "00:00";
+        private songHistory = [] as SongVM[];
 
         @Watch("playSongState")
         playSongHandler(song: SongVM) {
@@ -59,7 +75,7 @@
         playSong(song: SongVM) {
             if (this.howlSound && this.howlSound.playing()) {
                 this.howlSound.stop();
-                this.songProgress = 0;
+                this.resetSongProgress();
             }
             SongService.getSingleSongBlob(song.id).then(response => {
                 this.song = song;
@@ -78,7 +94,6 @@
         }
 
         onSongPlay() {
-            this.$store.commit("removeFromQueue", this.song);
             this.progressInterval();
         }
 
@@ -86,11 +101,19 @@
             if (this.howlSound && this.howlSound.playing()) {
                 const currentDuration = this.howlSound.seek() as number;
                 if (!this.grabbing) {
-                    this.songProgress = currentDuration / this.song.duration * 100;
+                    this.songProgress = currentDuration;
                 }
 
                 this.currentSongTimeFormatted = moment.utc(currentDuration * 1000).format("mm:ss");
                 setTimeout(this.progressInterval, 100);
+            }
+        }
+
+        resetSongProgress() {
+            this.songProgress = 0;
+            if (this.howlSound) {
+                this.howlSound.stop();
+                this.howlSound.play();
             }
         }
 
@@ -106,14 +129,12 @@
             }
         }
 
-        progressUserChange(value: string) {
+        progressUserChange(value: number) {
             if (!this.howlSound) {
                 return;
             }
-            const progressPercent = +value / 100;
-            const seekPosition = this.song.duration * progressPercent;
-            this.currentSongTimeFormatted = moment.utc(seekPosition * 1000).format("mm:ss");
-            this.howlSound?.seek(seekPosition);
+            this.currentSongTimeFormatted = moment.utc(value * 1000).format("mm:ss");
+            this.howlSound?.seek(value);
         }
 
         get playSongState() {
@@ -128,10 +149,44 @@
             this.grabbing = false;
         }
 
-        onSongEnd() {
+        playNextSong() {
             if (this.$store.state.queuedSongs.length > 0) {
                 const nextSong = this.$store.state.queuedSongs[0];
-                this.playSong(nextSong);
+                this.$store.commit("removeFromQueue", nextSong);
+                this.$store.commit("playSong", nextSong);
+            }
+            else {
+                this.$store.dispatch("playNextDefaultSong", this.song);
+            }
+        }
+
+        addToSongHistory(song: SongVM) {
+            this.songHistory.push(song);
+        }
+
+        onSongEnd() {
+            this.addToSongHistory(this.song);
+            this.playNextSong();
+        }
+
+        nextSongClick() {
+            this.addToSongHistory(this.song);
+            this.playNextSong();
+        }
+
+        previousSongClick() {
+            if (this.howlSound && this.howlSound.state() === "loaded" && this.howlSound.seek() > 5) {
+                this.resetSongProgress();
+            }
+            else {
+                const song = this.songHistory.pop();
+                if (song) {
+                    this.howlSound?.unload();
+                    this.$store.commit("playSong", song);
+                }
+                else {
+                    this.resetSongProgress();
+                }
             }
         }
     }
@@ -159,7 +214,7 @@
     }
 
     .slider-row {
-        padding-left:30%;
-        padding-right: 30%;
+        /*padding-left:30%;*/
+        /*padding-right: 30%;*/
     }
 </style>
